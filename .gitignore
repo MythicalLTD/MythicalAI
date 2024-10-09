@@ -1,3 +1,4 @@
 /discord_bot
 /.env
 /databases
+/commands/__pycache__
