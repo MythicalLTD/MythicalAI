@@ -2,11 +2,19 @@ import asyncio
 import os
 import json
 import discord # type: ignore
+import helpers.ColorHelper as ColorHelper
+
 
 class PingCommand:
     def __init__(self, client):
         self.client = client
-        self.register_commands()
+        ColorHelper.ColorHelper.print_colored_message("Registering Ping command...", "gray")
+        try :
+            self.register_commands()
+            ColorHelper.ColorHelper.print_colored_message("Ping command registered", "green")
+        except Exception as e:
+            ColorHelper.ColorHelper.print_colored_message(f"Error registering Ping command: {e}", "red")
+            exit()
 
     def register_commands(self):
         @self.client.slash_command(name="ping", description="Check the bot's latency")

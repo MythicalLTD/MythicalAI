@@ -2,13 +2,26 @@ import asyncio
 import os
 import json
 import discord  # type: ignore
+import helpers.ColorHelper as ColorHelper
 
 
 class DatabaseCommand:
     def __init__(self, client):
         self.client = client
-        self.database = client.create_group("database", "Manage the bot database")
-        self.register_commands()
+        ColorHelper.ColorHelper.print_colored_message(
+            "Registering Database command...", "gray"
+        )
+        try:
+            self.database = client.create_group("database", "Manage the bot database")
+            self.register_commands()
+            ColorHelper.ColorHelper.print_colored_message(
+                "Database command registered", "green"
+            )
+        except Exception as e:
+            ColorHelper.ColorHelper.print_colored_message(
+                f"Error registering Database command: {e}", "red"
+            )
+            exit()
 
     def register_commands(self):
         @self.database.command(name="clear", description="Clear the bot database")
@@ -24,14 +37,20 @@ class DatabaseCommand:
                         color=discord.Color.red(),
                     )
                     view = discord.ui.View()
-                    yes_button = discord.ui.Button(label="Yes", style=discord.ButtonStyle.green)
-                    no_button = discord.ui.Button(label="No", style=discord.ButtonStyle.red)
+                    yes_button = discord.ui.Button(
+                        label="Yes", style=discord.ButtonStyle.green
+                    )
+                    no_button = discord.ui.Button(
+                        label="No", style=discord.ButtonStyle.red
+                    )
 
                     async def yes_button_callback(interaction):
                         if interaction.user == ctx.author:
                             os.remove(filename)
                             await interaction.response.edit_message(
-                                content="Database has been cleared.", embed=None, view=None
+                                content="Database has been cleared.",
+                                embed=None,
+                                view=None,
                             )
                         else:
                             await interaction.response.send_message(

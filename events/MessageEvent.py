@@ -4,11 +4,18 @@ import json
 import random
 import discord  # type: ignore
 import colorama  # type: ignore
+import helpers.ColorHelper as ColorHelper
 
 class MessageEvent:
     def __init__(self, client):
         self.client = client
-        self.register_event()
+        ColorHelper.ColorHelper.print_colored_message("Registering Message event...", "gray")
+        try :
+            self.register_event()
+            ColorHelper.ColorHelper.print_colored_message("Message event registered", "green")
+        except Exception as e:
+            ColorHelper.ColorHelper.print_colored_message(f"Error registering Message event: {e}", "red")
+            exit()
     
     def register_event(self):
         def escape_string(word):
