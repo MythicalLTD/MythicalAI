@@ -18,8 +18,41 @@ class DatabaseCommand:
                 directory = "databases"
                 filename = f"{directory}/wordsdb_{server_id}.json"
                 if os.path.exists(filename):
-                    os.remove(filename)
-                    await ctx.respond("Database has been cleared.", ephemeral=True)
+                    embed = discord.Embed(
+                        title="Confirm Deletion",
+                        description="Are you sure you want to delete the database? This action cannot be undone.",
+                        color=discord.Color.red(),
+                    )
+                    view = discord.ui.View()
+                    yes_button = discord.ui.Button(label="Yes", style=discord.ButtonStyle.green)
+                    no_button = discord.ui.Button(label="No", style=discord.ButtonStyle.red)
+
+                    async def yes_button_callback(interaction):
+                        if interaction.user == ctx.author:
+                            os.remove(filename)
+                            await interaction.response.edit_message(
+                                content="Database has been cleared.", embed=None, view=None
+                            )
+                        else:
+                            await interaction.response.send_message(
+                                "You cannot interact with this button.", ephemeral=True
+                            )
+
+                    async def no_button_callback(interaction):
+                        if interaction.user == ctx.author:
+                            await interaction.response.edit_message(
+                                content="Deletion cancelled.", embed=None, view=None
+                            )
+                        else:
+                            await interaction.response.send_message(
+                                "You cannot interact with this button.", ephemeral=True
+                            )
+
+                    yes_button.callback = yes_button_callback
+                    no_button.callback = no_button_callback
+                    view.add_item(yes_button)
+                    view.add_item(no_button)
+                    await ctx.respond(embed=embed, view=view, ephemeral=True)
                 else:
                     await ctx.respond("Database does not exist.", ephemeral=True)
             else:
