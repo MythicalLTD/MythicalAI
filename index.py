@@ -5,6 +5,8 @@ import random
 import re
 from dotenv import load_dotenv # type: ignore
 from commands.DatabaseCommand import DatabaseCommand
+from commands.PingCommand import PingCommand
+
 import json
 import colorama # type: ignore
 
@@ -122,16 +124,7 @@ async def on_message(message):
                 print(showColorOutput(f'Responded to mention with expression: {expression}', "green"))
         counter = 0
 
-@client.slash_command(name="hello", description="Say hello to the bot", guild_ids=[int(os.getenv("GUILD_ID"))])
-async def hello(ctx: discord.ApplicationContext):
-    await ctx.respond("Hey!")
-
-
-@client.slash_command(name="ping", description="Show the bot's ping", guild_ids=[int(os.getenv("GUILD_ID"))])
-async def ping(ctx: discord.ApplicationContext):
-    latency = client.latency * 1000  # Convert to milliseconds
-    await ctx.respond(f':ping_pong: Pong! {latency:.2f}ms')
-
 DatabaseCommand(client)
+PingCommand(client)
 
 client.run(discord_token)
