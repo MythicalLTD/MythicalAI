@@ -28,7 +28,7 @@ class DatabaseCommand:
         async def database_clear(ctx: discord.ApplicationContext):
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
-                directory = "databases"
+                directory = "databases/words"
                 filename = f"{directory}/wordsdb_{server_id}.json"
                 if os.path.exists(filename):
                     embed = discord.Embed(
@@ -83,7 +83,7 @@ class DatabaseCommand:
         async def database_download(ctx: discord.ApplicationContext):
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
-                directory = "databases"
+                directory = "databases/words"
                 filename = f"{directory}/wordsdb_{server_id}.json"
                 if os.path.exists(filename):
                     await ctx.respond(file=discord.File(filename), ephemeral=True)
@@ -100,7 +100,7 @@ class DatabaseCommand:
         ):
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
-                directory = "databases"
+                directory = "databases/words"
                 filename = f"{directory}/wordsdb_{server_id}.json"
                 temp_filename = f"{directory}/temp_{server_id}.json"
                 if os.path.exists(temp_filename):

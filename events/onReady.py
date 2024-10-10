@@ -1,5 +1,6 @@
 import colorama  # type: ignore
 import helpers.ColorHelper as ColorHelper
+import helpers.SettingsHelper as SettingsHelper
 
 class onReady:
     def __init__(self, client):
@@ -27,3 +28,8 @@ class onReady:
             print(showColorOutput(f'Bot ID: {self.client.user.id}', "blue"))
             print(showColorOutput(f'Invite URL: https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=412317222976&integration_type=0&scope=bot+applications.commands', "cyan"))
             print("--------------")
+            for guild in self.client.guilds:
+                print(showColorOutput(f'Server name: {guild.name}', "yellow"))
+                print(showColorOutput(f'Server ID: {guild.id}', "magenta"))
+                print("--------------")
+                SettingsHelper.SettingsHelper.init_settings(guild.id, {"bot_enabled": True})

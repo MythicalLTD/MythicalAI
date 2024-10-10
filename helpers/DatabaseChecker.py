@@ -6,8 +6,8 @@ import helpers.ColorHelper as ColorHelper
 class DatabaseChecker:
     @staticmethod
     def checkAll():
-        base_dir = '/databases'
-        corrupted_dir = os.path.join(base_dir, 'corrupted_db')
+        base_dir = '/databases/words'
+        corrupted_dir = os.path.join(base_dir, 'corrupted_words_db')
         os.makedirs(corrupted_dir, exist_ok=True)
 
         for root, dirs, files in os.walk(base_dir):

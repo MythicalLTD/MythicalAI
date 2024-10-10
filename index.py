@@ -5,8 +5,14 @@ from commands.DatabaseCommand import DatabaseCommand
 from commands.PingCommand import PingCommand
 from events.MessageEvent import MessageEvent
 from events.onReady import onReady
+from events.onJoin import onJoin
 from helpers.ColorHelper import ColorHelper
 from helpers.DatabaseChecker import DatabaseChecker
+from helpers.AsciiArt import AsciiArt
+import helpers.SettingsHelper as SettingsHelper
+from commands.SettingsCommand import SettingsCommand
+
+AsciiArt.print_logo()
 
 ColorHelper.print_colored_message("Starting the bot...", "gray")
 ColorHelper.print_colored_message("Loading env...", "gray")
@@ -45,12 +51,15 @@ except Exception as e:
     exit()
 
 
+
 # Register events
 onReady(client)
 MessageEvent(client)
+onJoin(client)
 
 # Register commands
 DatabaseCommand(client)
 PingCommand(client)
+SettingsCommand(client)
 
 client.run(discord_token)

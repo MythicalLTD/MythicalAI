@@ -40,10 +40,25 @@ class MessageEvent:
                 return
             if message.guild is None:
                 return
-
+            
+            if not message.channel.permissions_for(message.guild.me).send_messages:
+                owner = message.guild.owner
+                if owner:
+                    # Check if the bot has already sent a message to the owner about this channel
+                    already_notified_key = f"notified_{message.guild.id}_{message.channel.id}"
+                    if not hasattr(self.client, 'already_notified'):
+                        self.client.already_notified = set()
+                    
+                    if already_notified_key not in self.client.already_notified:
+                        try:
+                            await owner.send(f"Hi {owner.name}, I don't have permission to send messages in <#{message.channel.id}> on your server `{message.guild.name}`. Please update my permissions.")
+                            self.client.already_notified.add(already_notified_key)
+                        except discord.Forbidden:
+                            print(showColorOutput(f"Could not send a message to the server owner about missing permissions in {message.channel.name}.", "red"))
+                return
             server_id = message.guild.id
             server_name = message.guild.name
-            directory = "databases"
+            directory = "databases/words"
             filename = f"{directory}/wordsdb_{server_id}.json"
             debug = os.getenv("DEBUG") == "true"
             if debug:
@@ -70,7 +85,7 @@ class MessageEvent:
                 else:
                     words = []
                 for word in words:
-                    if word != f"<@{bot_id}>" and message.author.id != int(bot_id):
+                    if word not in ["@everyone", "@here"] and not word.startswith("<@&") and word != f"<@{bot_id}>" and message.author.id != int(bot_id):
                         escaped_word = escape_string(word)
                         data["words"].append(escaped_word)
                         if debug:
