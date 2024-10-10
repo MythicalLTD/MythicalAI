@@ -18,7 +18,9 @@ class SettingsCommand:
         @self.client.slash_command(name="settings", description="Customize bot settings")
         async def settings(ctx: discord.ApplicationContext):
             embed = discord.Embed(title="Bot Settings", description="Select an option to customize:", color=discord.Color.blue())
-            
+            if not ctx.author.guild_permissions.administrator:
+                await ctx.respond("You do not have permission to use this command.", ephemeral=True)
+                return
             bot_enabled = SettingsHelper.SettingsHelper.get_setting(ctx.guild.id, "bot_enabled")
             if (bot_enabled == False):
                 status_text = "Disabled"
