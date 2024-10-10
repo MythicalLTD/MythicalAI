@@ -24,3 +24,4 @@ class ColorHelper:
         }
         color_code = color_dict.get(color.lower(), Fore.WHITE)
         print(f"{color_code}{message}{Style.RESET_ALL}")
+        return None

@@ -5,6 +5,7 @@ import random
 import discord  # type: ignore
 import colorama  # type: ignore
 import helpers.ColorHelper as ColorHelper
+import helpers.SettingsHelper as SettingsHelper
 
 class MessageEvent:
     def __init__(self, client):
@@ -40,6 +41,10 @@ class MessageEvent:
                 return
             if message.guild is None:
                 return
+            server_id = message.guild.id
+            isEnabled = SettingsHelper.SettingsHelper.get_setting(server_id, "bot_enabled")
+            if not isEnabled:
+                return
             
             if not message.channel.permissions_for(message.guild.me).send_messages:
                 owner = message.guild.owner
@@ -59,7 +64,7 @@ class MessageEvent:
             server_id = message.guild.id
             server_name = message.guild.name
             directory = "databases/words"
-            filename = f"{directory}/wordsdb_{server_id}.json"
+            filename = f"{directory}/{server_id}.json"
             debug = os.getenv("DEBUG") == "true"
             if debug:
                 print(showColorOutput(f'[{server_id}] Message from {message.author}: {message.content}', "magenta"))
@@ -106,16 +111,42 @@ class MessageEvent:
                 if len(data["words"]) >= 100:
                     num_words = min(random.randint(1, 5), len(data["words"]))
                     expression = " ".join(random.sample(data["words"], num_words))
+                    async with message.channel.typing():
+                        await asyncio.sleep(random.randint(1, 4))
                     await message.channel.send(expression)
                     if debug:
                         print(showColorOutput(f'Sent expression: {expression}', "green"))
+                else:
+                    if debug:
+                        print(showColorOutput(f'Not enough words to send an expression', "yellow"))
+                    await message.add_reaction("🕒")
+                    try:
+                        await message.author.send("There are not enough words to respond with an expression at the moment. Please try again later.")
+                        if debug:
+                            print(showColorOutput(f'Sent DM to {message.author} about not enough words', "green"))
+                    except discord.Forbidden:
+                        if debug:
+                            print(showColorOutput(f'Could not send a DM to {message.author}', "red"))
                 counter = 0
 
             if self.client.user in message.mentions:
                 if len(data["words"]) >= 100:
                     num_words = min(random.randint(1, 5), len(data["words"]))
                     expression = " ".join(random.sample(data["words"], num_words))
+                    async with message.channel.typing():
+                        await asyncio.sleep(random.randint(1, 4))
                     await message.channel.send(expression)
                     if debug:
                         print(showColorOutput(f'Responded to mention with expression: {expression}', "green"))
+                else:
+                    if debug:
+                        print(showColorOutput(f'Not enough words to send an expression', "yellow"))
+                    await message.add_reaction("🕒")
+                    try:
+                        await message.author.send("There are not enough words to respond with an expression at the moment. Please try again later.")
+                        if debug:
+                            print(showColorOutput(f'Sent DM to {message.author} about not enough words', "green"))
+                    except discord.Forbidden:
+                        if debug:
+                            print(showColorOutput(f'Could not send a DM to {message.author}', "red"))
                 counter = 0

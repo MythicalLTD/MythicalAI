@@ -1,6 +1,7 @@
 import colorama  # type: ignore
 import helpers.ColorHelper as ColorHelper
 import helpers.SettingsHelper as SettingsHelper
+import helpers.DatabaseChecker as DatabaseChecker  
 
 class onReady:
     def __init__(self, client):
@@ -31,5 +32,21 @@ class onReady:
             for guild in self.client.guilds:
                 print(showColorOutput(f'Server name: {guild.name}', "yellow"))
                 print(showColorOutput(f'Server ID: {guild.id}', "magenta"))
+                print(showColorOutput(f'Total Users: {guild.member_count}', "cyan"))
                 print("--------------")
                 SettingsHelper.SettingsHelper.init_settings(guild.id, {"bot_enabled": True})
+            print(showColorOutput(f'Total Guilds: {len(self.client.guilds)}', "green"))
+            print(showColorOutput(f'Total Users: {len(self.client.users)}', "blue"))
+            print("--------------")
+            server_ids = [guild.id for guild in self.client.guilds]
+            # Check databases
+            ColorHelper.ColorHelper.print_colored_message("Checking databases...", "gray")
+            try:
+                DatabaseChecker.DatabaseChecker.checkAll()
+                DatabaseChecker.DatabaseChecker.checkForSettingsGhostFiles(server_ids)
+                DatabaseChecker.DatabaseChecker.checkForWordsGhostFiles(server_ids)
+                ColorHelper.ColorHelper.print_colored_message("Databases checked", "green")
+            except Exception as e:
+                ColorHelper.ColorHelper.print_colored_message(f"Error checking dbs: {e}", "red")
+                exit()
+            ColorHelper.ColorHelper.print_colored_message("Bot is ready", "green")

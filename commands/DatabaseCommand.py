@@ -29,7 +29,7 @@ class DatabaseCommand:
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
                 directory = "databases/words"
-                filename = f"{directory}/wordsdb_{server_id}.json"
+                filename = f"{directory}/{server_id}.json"
                 if os.path.exists(filename):
                     embed = discord.Embed(
                         title="Confirm Deletion",
@@ -84,7 +84,7 @@ class DatabaseCommand:
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
                 directory = "databases/words"
-                filename = f"{directory}/wordsdb_{server_id}.json"
+                filename = f"{directory}/{server_id}.json"
                 if os.path.exists(filename):
                     await ctx.respond(file=discord.File(filename), ephemeral=True)
                 else:
@@ -101,7 +101,7 @@ class DatabaseCommand:
             if ctx.author.guild_permissions.administrator:
                 server_id = ctx.guild_id
                 directory = "databases/words"
-                filename = f"{directory}/wordsdb_{server_id}.json"
+                filename = f"{directory}/{server_id}.json"
                 temp_filename = f"{directory}/temp_{server_id}.json"
                 if os.path.exists(temp_filename):
                     os.remove(temp_filename)

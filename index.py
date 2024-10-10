@@ -7,10 +7,10 @@ from events.MessageEvent import MessageEvent
 from events.onReady import onReady
 from events.onJoin import onJoin
 from helpers.ColorHelper import ColorHelper
-from helpers.DatabaseChecker import DatabaseChecker
 from helpers.AsciiArt import AsciiArt
 import helpers.SettingsHelper as SettingsHelper
 from commands.SettingsCommand import SettingsCommand
+from events.onLeave import onLeave
 
 AsciiArt.print_logo()
 
@@ -41,21 +41,12 @@ client = discord.Bot(
 
 ColorHelper.print_colored_message("Bot initialized", "green")
 
-# Check databases
-ColorHelper.print_colored_message("Checking databases...", "gray")
-try:
-    DatabaseChecker.checkAll()
-    ColorHelper.print_colored_message("Databases checked", "green")
-except Exception as e:
-    ColorHelper.print_colored_message(f"Error checking dbs: {e}", "red")
-    exit()
-
-
 
 # Register events
 onReady(client)
 MessageEvent(client)
 onJoin(client)
+onLeave(client)
 
 # Register commands
 DatabaseCommand(client)
