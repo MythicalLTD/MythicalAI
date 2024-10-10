@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "name": "Start the bot",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/index.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

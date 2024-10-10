@@ -11,6 +11,7 @@ from helpers.AsciiArt import AsciiArt
 import helpers.SettingsHelper as SettingsHelper
 from commands.SettingsCommand import SettingsCommand
 from events.onLeave import onLeave
+from commands.OwnerCommand import OwnerCommand # type: ignore
 
 AsciiArt.print_logo()
 
@@ -52,5 +53,6 @@ onLeave(client)
 DatabaseCommand(client)
 PingCommand(client)
 SettingsCommand(client)
+OwnerCommand(client)
 
 client.run(discord_token)

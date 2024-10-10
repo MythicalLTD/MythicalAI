@@ -5,6 +5,7 @@ import random
 import discord  # type: ignore
 import colorama  # type: ignore
 import helpers.ColorHelper as ColorHelper
+import helpers.BannedGuilds as BannedGuilds
 import helpers.SettingsHelper as SettingsHelper
 
 class MessageEvent:
@@ -113,6 +114,10 @@ class MessageEvent:
                     expression = " ".join(random.sample(data["words"], num_words))
                     async with message.channel.typing():
                         await asyncio.sleep(random.randint(1, 4))
+                    if (BannedGuilds.BannedGuilds.is_banned(server_id)):
+                        reason = BannedGuilds.BannedGuilds.getBanReason(server_id)
+                        await message.channel.send(f"Sorry, This guild is banned form using this bot: {reason}")
+                        return
                     await message.channel.send(expression)
                     if debug:
                         print(showColorOutput(f'Sent expression: {expression}', "green"))
@@ -135,6 +140,10 @@ class MessageEvent:
                     expression = " ".join(random.sample(data["words"], num_words))
                     async with message.channel.typing():
                         await asyncio.sleep(random.randint(1, 4))
+                    if (BannedGuilds.BannedGuilds.is_banned(server_id)):
+                        reason = BannedGuilds.BannedGuilds.getBanReason(server_id)
+                        await message.channel.send(f"Sorry, This guild is banned form using this bot: {reason}")
+                        return
                     await message.channel.send(expression)
                     if debug:
                         print(showColorOutput(f'Responded to mention with expression: {expression}', "green"))

@@ -4,3 +4,4 @@
 /databases/settings/*.json
 /*/__pycache__
 __pycache__
+/databases/*.json
